@@ -41,9 +41,7 @@ def send_sms(body: str):
 
 
 def check_permits():
-       send_sms("TEST: Rogue monitor is working!")
-    return
-
+     
     print(f"[{now()}] Checking BLM permit page...")
 
     try:
