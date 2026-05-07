@@ -89,7 +89,7 @@ def check_permits():
                 print(f"[{now()}] May 29 found but only {spaces} space(s) — need {MIN_SPACES}.")
             return
 
-        print(f"[{now()}] May table found — no Fri 29 row yet.")
+       send_sms("TEST: Rogue monitor working!")
         return
 
     print(f"[{now()}] Could not find May table on page.")
