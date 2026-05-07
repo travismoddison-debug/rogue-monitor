@@ -39,31 +39,39 @@ def check_permits():
         return
 
     soup = BeautifulSoup(resp.text, "html.parser")
-    for table in soup.find_all("table"):
-        first_cell = table.find("td") or table.find("th")
-        if not first_cell or TARGET_MONTH not in first_cell.get_text():
-            continue
-        for row in table.find_all("tr"):
-            cells = [td.get_text(strip=True) for td in row.find_all("td")]
-            if len(cells) < 3:
-                continue
-            day_col, date_col, spaces_col = cells[0], cells[1], cells[2]
-            if TARGET_DAY_NAME.lower() not in day_col.lower():
-                continue
-            if TARGET_DATE_NUM not in date_col:
-                continue
-            try:
-                spaces = int(spaces_col)
-            except ValueError:
-                print(f"[{now()}] Couldn't parse spaces: '{spaces_col}'")
+    tables = soup.find_all("table")
+    print(f"[{now()}] Found {len(tables)} table(s) on page")
+
+    for i, table in enumerate(tables):
+        all_text = table.get_text(separator=" ", strip=True)[:120]
+        print(f"  Table {i}: {all_text}")
+
+    for table in tables:
+        if TARGET_MONTH in table.get_text():
+            print(f"[{now()}] Found table containing '{TARGET_MONTH}' — checking rows...")
+            for row in table.find_all("tr"):
+                cells = [td.get_text(strip=True) for td in row.find_all("td")]
+                print(f"  Row cells: {cells}")
+                if len(cells) < 3:
+                    continue
+                day_col, date_col, spaces_col = cells[0], cells[1], cells[2]
+                if TARGET_DAY_NAME.lower() not in day_col.lower():
+                    continue
+                if TARGET_DATE_NUM not in date_col:
+                    continue
+                try:
+                    spaces = int(spaces_col)
+                except ValueError:
+                    print(f"[{now()}] Couldn't parse spaces: '{spaces_col}'")
+                    return
+                if spaces >= MIN_SPACES:
+                    send_sms(f"ROGUE PERMIT OPEN!\nFri May 29: {spaces} spaces\nBook now: {URL}")
+                else:
+                    print(f"[{now()}] May 29 found — only {spaces} space(s), need {MIN_SPACES}.")
                 return
-            if spaces >= MIN_SPACES:
-                send_sms(f"ROGUE PERMIT OPEN!\nFri May 29: {spaces} spaces\nBook now: {URL}")
-            else:
-                print(f"[{now()}] May 29 found — only {spaces} space(s), need {MIN_SPACES}.")
+            send_sms("TEST: Rogue monitor working!")
             return
-        send_sms("TEST: Rogue monitor working!")
-        return
+
     print(f"[{now()}] May table not found on page.")
 
 
