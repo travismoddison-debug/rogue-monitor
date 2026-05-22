@@ -9,10 +9,10 @@ PHONE_NUMBER       = "8055888452"
 GMAIL_ADDRESS      = "travis.moddison@gmail.com"
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "glfw ndwb saik dbce")
 
-TARGET_MONTH    = "May"
-TARGET_DATE_NUM = "29"
-TARGET_DAY_NAME = "Fri"
-MIN_SPACES      = 4
+TARGET_MONTH    = "Aug"
+TARGET_DATE_NUM = "2"
+TARGET_DAY_NAME = "Sun"
+MIN_SPACES      = 6
 
 URL         = "https://www.blm.gov/or/resources/recreation/rogue/rogue_river.php"
 SMS_GATEWAY = f"{PHONE_NUMBER}@vtext.com"
